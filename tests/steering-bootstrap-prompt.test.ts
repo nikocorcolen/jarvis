@@ -7,6 +7,7 @@ describe('renderSteeringBootstrapPrompt (T-005)', () => {
     const out = renderSteeringBootstrapPrompt({
       detectedLanguage: 'TypeScript/JavaScript',
       manifests: ['package.json'],
+      lang: 'en',
     });
 
     // Rule 1 (product.md): ASK, NEVER INFER.
@@ -29,12 +30,13 @@ describe('renderSteeringBootstrapPrompt (T-005)', () => {
   });
 
   it('handles unknown language gracefully', () => {
-    const out = renderSteeringBootstrapPrompt({
+    const result = renderSteeringBootstrapPrompt({
       detectedLanguage: null,
       manifests: [],
+      lang: 'en',
     });
-    assert.match(out, /Detected language: <unknown>/);
-    assert.match(out, /Detected manifests: <none>/);
+    assert.match(result, /Detected language: <unknown>/);
+    assert.match(result, /Detected manifests: <none>/);
   });
 
   it('renders identically for the same input (deterministic)', () => {

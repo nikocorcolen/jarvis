@@ -55,24 +55,24 @@ updated: 2026-05-10
 - [x] **T-006**: Implement the `init` command body.
       Files: src/cli/commands/init.ts
       Done when:
-      - Refuses cleanly when `.friday/` already exists (exit 1, no
+      - Refuses cleanly when `.jarvis/` already exists (exit 1, no
         partial writes).
-      - Creates `.friday/{steering,specs}` and copies all six
+      - Creates `.jarvis/{steering,specs}` and copies all six
         templates.
-      - Writes `.friday/config.json` with formatVersion, createdAt,
+      - Writes `.jarvis/config.json` with formatVersion, createdAt,
         createdBy.
       - Calls `detectStack`; if anything is detected, runs the two
         prefill functions and prints the bootstrap prompt to stdout.
       - Prints a success summary to stderr.
       Addresses: US-001 (all), US-002 (all), US-003 (all)
 
-- [x] **T-007**: End-to-end tests for `friday init`.
+- [x] **T-007**: End-to-end tests for `jarvis init`.
       Files: tests/init.e2e.test.ts (new)
       Done when: three e2e cases pass against a temp directory:
-      (a) empty dir → .friday/ created, no prompt on stdout.
-      (b) dir with package.json → .friday/ created, tech.md and
+      (a) empty dir → .jarvis/ created, no prompt on stdout.
+      (b) dir with package.json → .jarvis/ created, tech.md and
           structure.md pre-filled, bootstrap prompt on stdout.
-      (c) dir with existing .friday/ → exit 1, no writes.
+      (c) dir with existing .jarvis/ → exit 1, no writes.
       Tests assert exit codes, file presence, and prompt presence
       via stdout/stderr separation.
       Addresses: US-001, US-002, US-003

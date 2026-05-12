@@ -1,7 +1,12 @@
 import kleur from 'kleur';
 
+// https://no-color.org — honour NO_COLOR if defined, regardless of TTY.
+if (process.env['NO_COLOR'] !== undefined) {
+  kleur.enabled = false;
+}
+
 /**
- * Output convention for Friday CLI:
+ * Output convention for Jarvis CLI:
  *
  *  - stdout : the "product" of the command (prompts, dumps, lists)
  *             — anything a user might pipe to another tool.
@@ -38,6 +43,18 @@ export function dim(text: string): string {
 
 export function bold(text: string): string {
   return kleur.bold(text);
+}
+
+export function green(text: string): string {
+  return kleur.green(text);
+}
+
+export function red(text: string): string {
+  return kleur.red(text);
+}
+
+export function yellow(text: string): string {
+  return kleur.yellow(text);
 }
 
 /** Used to print copy-paste prompts with visual delimiters. */

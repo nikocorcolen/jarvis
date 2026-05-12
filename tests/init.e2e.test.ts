@@ -4,7 +4,7 @@ import { mkdtemp, rm, writeFile, readFile, mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { run } from '../src/cli/commands/init.js';
-import type { FridayConfig } from '../src/core/types.js';
+import type { JarvisConfig } from '../src/core/types.js';
 
 /**
  * Captures stdout/stderr while running an async block. We swap the
@@ -36,25 +36,26 @@ async function capture<T>(
 }
 
 const FIXED_NOW = '2026-05-10T12:00:00.000Z';
-const FIXED_CREATED_BY = 'friday-cli@test';
+const FIXED_CREATED_BY = 'jarvis-cli@test';
 
-describe('friday init — empty project (T-007a, US-001)', () => {
-  it('creates .friday/ with steering and config, no prompt on stdout', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'friday-init-empty-'));
+describe('jarvis init — empty project (T-007a, US-001)', () => {
+  it('creates .jarvis/ with steering and config, no prompt on stdout', async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'jarvis-init-empty-'));
     try {
       const { result, stdout, stderr } = await capture(() =>
         run({
           cwd: dir,
           now: () => FIXED_NOW,
           createdBy: FIXED_CREATED_BY,
+          lang: 'en',
         }),
       );
 
       assert.equal(result, 0);
 
       // Files exist.
-      const fridayDir = join(dir, '.friday');
-      const steeringDir = join(fridayDir, 'steering');
+      const jarvisDir = join(dir, '.jarvis');
+      const steeringDir = join(jarvisDir, 'steering');
       for (const file of ['product.md', 'tech.md', 'structure.md']) {
         const content = await readFile(join(steeringDir, file), 'utf8');
         assert.match(content, /<!-- TODO -->/, `${file} should keep TODO markers`);
@@ -62,10 +63,10 @@ describe('friday init — empty project (T-007a, US-001)', () => {
 
       // config.json shape and values.
       const configRaw = await readFile(
-        join(fridayDir, 'config.json'),
+        join(jarvisDir, 'config.json'),
         'utf8',
       );
-      const config = JSON.parse(configRaw) as FridayConfig;
+      const config = JSON.parse(configRaw) as JarvisConfig;
       assert.equal(config.formatVersion, 1);
       assert.equal(config.createdAt, FIXED_NOW);
       assert.equal(config.createdBy, FIXED_CREATED_BY);
@@ -82,9 +83,9 @@ describe('friday init — empty project (T-007a, US-001)', () => {
   });
 });
 
-describe('friday init — repo with package.json (T-007b, US-002)', () => {
+describe('jarvis init — repo with package.json (T-007b, US-002)', () => {
   it('pre-fills tech.md, structure.md, prints bootstrap prompt to stdout', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'friday-init-pkg-'));
+    const dir = await mkdtemp(join(tmpdir(), 'jarvis-init-pkg-'));
     try {
       await writeFile(
         join(dir, 'package.json'),
@@ -103,6 +104,7 @@ describe('friday init — repo with package.json (T-007b, US-002)', () => {
           cwd: dir,
           now: () => FIXED_NOW,
           createdBy: FIXED_CREATED_BY,
+          lang: 'en',
         }),
       );
 
@@ -110,7 +112,7 @@ describe('friday init — repo with package.json (T-007b, US-002)', () => {
 
       // tech.md was pre-filled.
       const tech = await readFile(
-        join(dir, '.friday/steering/tech.md'),
+        join(dir, '.jarvis/steering/tech.md'),
         'utf8',
       );
       assert.match(tech, /\*\*Language\*\*: TypeScript\/JavaScript/);
@@ -123,7 +125,7 @@ describe('friday init — repo with package.json (T-007b, US-002)', () => {
 
       // structure.md was pre-filled with the visible folders only.
       const structure = await readFile(
-        join(dir, '.friday/steering/structure.md'),
+        join(dir, '.jarvis/steering/structure.md'),
         'utf8',
       );
       assert.match(structure, /- `docs\/` —/);
@@ -135,13 +137,13 @@ describe('friday init — repo with package.json (T-007b, US-002)', () => {
 
       // product.md was NOT pre-filled (asymmetry rule).
       const product = await readFile(
-        join(dir, '.friday/steering/product.md'),
+        join(dir, '.jarvis/steering/product.md'),
         'utf8',
       );
       assert.match(product, /<!-- TODO -->/);
 
       // Bootstrap prompt on stdout, success summary on stderr.
-      assert.match(stdout, /You are helping me draft Friday steering files/);
+      assert.match(stdout, /You are helping me draft Jarvis steering files/);
       assert.match(stdout, /TypeScript\/JavaScript/);
       assert.match(stderr, /Detected:/);
       assert.match(stderr, /Pre-filled tech\.md/);
@@ -152,29 +154,30 @@ describe('friday init — repo with package.json (T-007b, US-002)', () => {
   });
 });
 
-describe('friday init — refuses when .friday/ exists (T-007c, US-003)', () => {
+describe('jarvis init — refuses when .jarvis/ exists (T-007c, US-003)', () => {
   it('exits 1 and writes nothing', async () => {
-    const dir = await mkdtemp(join(tmpdir(), 'friday-init-exists-'));
+    const dir = await mkdtemp(join(tmpdir(), 'jarvis-init-exists-'));
     try {
-      await mkdir(join(dir, '.friday'));
+      await mkdir(join(dir, '.jarvis'));
       // Put a sentinel file inside; it must remain untouched.
-      await writeFile(join(dir, '.friday', 'SENTINEL'), 'do-not-touch', 'utf8');
+      await writeFile(join(dir, '.jarvis', 'SENTINEL'), 'do-not-touch', 'utf8');
 
       const { result, stdout, stderr } = await capture(() =>
         run({
           cwd: dir,
           now: () => FIXED_NOW,
           createdBy: FIXED_CREATED_BY,
+          lang: 'en',
         }),
       );
 
       assert.equal(result, 1);
       assert.equal(stdout, '');
-      assert.match(stderr, /\.friday\/ already exists/);
+      assert.match(stderr, /\.jarvis already exists/);
 
       // Sentinel survived; no steering or config was written.
       const sentinel = await readFile(
-        join(dir, '.friday', 'SENTINEL'),
+        join(dir, '.jarvis', 'SENTINEL'),
         'utf8',
       );
       assert.equal(sentinel, 'do-not-touch');

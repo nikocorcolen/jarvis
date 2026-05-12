@@ -25,17 +25,17 @@ justification.
 
 ## 3. External services
 
-None. Friday operates entirely on the local filesystem. It does not
+None. Jarvis operates entirely on the local filesystem. It does not
 make network calls, does not call any LLM, and does not phone home
 for telemetry. This is a hard guarantee, not a soft preference.
 
 ## 4. Storage & data
 
-All persistent state lives under `.friday/` at the repo root:
+All persistent state lives under `.jarvis/` at the repo root:
 
-- `.friday/config.json` — project metadata with `formatVersion`.
-- `.friday/steering/{product,tech,structure}.md` — human-written.
-- `.friday/specs/<name>/{requirements,design,tasks}.md` — collaborative
+- `.jarvis/config.json` — project metadata with `formatVersion`.
+- `.jarvis/steering/{product,tech,structure}.md` — human-written.
+- `.jarvis/specs/<name>/{requirements,design,tasks}.md` — collaborative
   human + agent.
 
 Files are UTF-8 markdown with YAML front-matter. The `formatVersion`
@@ -68,7 +68,7 @@ field exists from day one to support future migrations cleanly.
 
 ## 6. Out of bounds
 
-- **No LLM calls in the MVP.** `friday spec fill` (calling an LLM
+- **No LLM calls in the MVP.** `jarvis spec fill` (calling an LLM
   directly) is a v1.x feature gated behind explicit configuration.
   The MVP is intentionally agent-agnostic.
 - **No telemetry, no analytics, no auto-update.** Ever, by design,
@@ -81,4 +81,4 @@ field exists from day one to support future migrations cleanly.
 - **No plugins or extensibility hooks** in the MVP. Premature
   extension points are a maintenance tax that pays off only when
   there is real demand we cannot yet justify.
-- **No watch mode, no daemon.** Friday runs, does its work, exits.
+- **No watch mode, no daemon.** Jarvis runs, does its work, exits.

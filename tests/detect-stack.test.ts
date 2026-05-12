@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { detectStack, MAX_DEPENDENCIES } from '../src/core/detect-stack.js';
 
 async function makeTmp(): Promise<string> {
-  return mkdtemp(join(tmpdir(), 'friday-detect-'));
+  return mkdtemp(join(tmpdir(), 'jarvis-detect-'));
 }
 
 async function writePkg(dir: string, body: object): Promise<void> {
@@ -25,7 +25,7 @@ describe('detectStack — manifest precedence (T-001, FR-001)', () => {
   });
 
   it('returns nulls when no manifest is present', async () => {
-    const empty = await mkdtemp(join(tmpdir(), 'friday-detect-empty-'));
+    const empty = await mkdtemp(join(tmpdir(), 'jarvis-detect-empty-'));
     try {
       const result = await detectStack(empty);
       assert.equal(result.language, null);

@@ -10,8 +10,8 @@ updated: 2026-05-10
 
 ## 1. Overview
 
-`friday init` is implemented as an orchestration command in
-`src/cli/commands/init.ts`. It checks for an existing `.friday/`,
+`jarvis init` is implemented as an orchestration command in
+`src/cli/commands/init.ts`. It checks for an existing `.jarvis/`,
 calls the existing `detectStack` helper, copies the steering
 templates, and uses small `pre-fill` functions to inject detected
 values into `tech.md` and `structure.md`. The optional bootstrap
@@ -24,7 +24,7 @@ parallelism is needed.
 ```
 cli/commands/init.ts
         │
-        ├─► core/friday-dir.ts        (locate / detect existing .friday)
+        ├─► core/jarvis-dir.ts        (locate / detect existing .jarvis)
         ├─► core/detect-stack.ts      (read manifests)
         ├─► core/templates.ts         (load steering templates)
         ├─► core/init-prefill.ts      (NEW: pre-fill tech.md / structure.md)
@@ -40,7 +40,7 @@ existing scaffolding helpers.
 
 ### 3.1 `cli/commands/init.ts`
 - **Responsibility**: orchestrate the init flow. Detect existing
-  `.friday/`, call detection, write files, print summary, optionally
+  `.jarvis/`, call detection, write files, print summary, optionally
   print bootstrap prompt.
 - **Location**: `src/cli/commands/init.ts`
 - **Addresses**: US-001 (criteria 1, 2, 3, 4), US-002 (all), US-003 (all)
@@ -83,10 +83,10 @@ interface DetectedStack {
 }
 
 // Reused from core/types.ts:
-interface FridayConfig {
+interface JarvisConfig {
   formatVersion: number;   // 1
   createdAt: string;       // ISO 8601
-  createdBy: string;       // "friday-cli@<version>"
+  createdBy: string;       // "jarvis-cli@<version>"
 }
 ```
 
@@ -122,8 +122,8 @@ keep collecting `manifests` array for visibility).
 
 ## 6. Error handling
 
-- **`.friday/` already exists** (US-003): the command checks
-  `pathExists(join(cwd, '.friday'))` BEFORE any write. If true, prints
+- **`.jarvis/` already exists** (US-003): the command checks
+  `pathExists(join(cwd, '.jarvis'))` BEFORE any write. If true, prints
   the message via `error()` and returns exit code 1. No partial state.
 - **Manifest exists but is malformed** (e.g. broken package.json):
   `detectStack` already swallows JSON parse errors and returns
@@ -161,7 +161,7 @@ keep collecting `manifests` array for visibility).
 - **Addresses**: US-001 (criterion 4 implicitly), US-002 (criteria 4, 5)
 
 ### 8.3 Refuse instead of `--force` overwrite
-- **Decision**: the MVP refuses if `.friday/` exists and asks the
+- **Decision**: the MVP refuses if `.jarvis/` exists and asks the
   user to delete it manually.
 - **Alternative considered**: `--force` flag to wipe and recreate.
 - **Rejected because**: low-value, high-risk feature for v0.1.

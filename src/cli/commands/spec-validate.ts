@@ -12,6 +12,6 @@ export interface SpecValidateArgs {
 
 export async function run(args: SpecValidateArgs): Promise<number> {
   const target = args.spec ?? '<all>';
-  info(`friday spec validate ${target}: not implemented yet (traceability-validation spec).`);
+  info(`jarvis spec validate ${target}: not implemented yet (traceability-validation spec).`);
   return 0;
 }

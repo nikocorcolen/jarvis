@@ -20,7 +20,7 @@ updated: 2026-05-10
 
 - [x] **T-002**: Implement `readSpecState` and `listSpecs`.
       Files: src/core/spec-store.ts
-      Done when: given a fixture `.friday/` with two specs (one
+      Done when: given a fixture `.jarvis/` with two specs (one
       complete, one missing tasks.md), returns `SpecState[]` reflecting
       reality. Reads of the three phase files run in parallel via
       `Promise.all`. Malformed front-matter yields `status: null`
@@ -57,7 +57,7 @@ updated: 2026-05-10
       tests pin each output.
       Addresses: US-001 (criterion 4), US-002 (criteria 2, 3)
 
-- [ ] **T-006**: Implement the `friday spec new <name>` command body.
+- [x] **T-006**: Implement the `jarvis spec new <name>` command body.
       Files: src/cli/commands/spec-new.ts
       Done when: validates name, calls `createSpec`, prints
       requirements prompt to stdout and a one-line success summary to
@@ -65,7 +65,7 @@ updated: 2026-05-10
       Refuses on invalid name with the regex shown.
       Addresses: US-001 (all), FR-002
 
-- [ ] **T-007**: Implement the `friday spec approve <name> <phase>`
+- [x] **T-007**: Implement the `jarvis spec approve <name> <phase>`
       command body.
       Files: src/cli/commands/spec-approve.ts
       Done when: pattern-matches on `ApproveResult`. Out-of-order and
@@ -75,7 +75,7 @@ updated: 2026-05-10
       a "ready for implementation" message to stderr only.
       Addresses: US-002 (all), FR-001
 
-- [ ] **T-008**: Implement the `friday spec status [--json]` command.
+- [x] **T-008**: Implement the `jarvis spec status [--json]` command.
       Files: src/cli/commands/spec-status.ts
       Done when: human format prints one line per spec with three
       compact phase markers (e.g. `R✓ D✓ T·` for approved/approved/
@@ -84,7 +84,7 @@ updated: 2026-05-10
       pointer to `spec new`.
       Addresses: US-003 (all), NFR-003
 
-- [ ] **T-009**: End-to-end tests for the three commands across a
+- [x] **T-009**: End-to-end tests for the three commands across a
       shared fixture project.
       Files: tests/spec-lifecycle.e2e.test.ts (new)
       Done when: a single test file walks the full happy path:
@@ -96,14 +96,14 @@ updated: 2026-05-10
       out-of-order approve, missing spec).
       Addresses: US-001, US-002, US-003, FR-001, FR-002
 
-- [ ] **T-010**: Performance check for NFR-001.
+- [x] **T-010**: Performance check for NFR-001.
       Files: tests/spec-status.perf.test.ts (new)
       Done when: a synthetic project with 50 specs runs
       `spec status` under 100ms on CI. Skippable via
-      `FRIDAY_SKIP_PERF=1`.
+      `JARVIS_SKIP_PERF=1`.
       Addresses: NFR-001
 
-- [ ] **T-011**: Update README to mark `spec new`, `spec approve`,
+- [x] **T-011**: Update README to mark `spec new`, `spec approve`,
       `spec status` as implemented; add a "Quick tour" section that
       walks through the full lifecycle on a tiny example.
       Files: README.md
@@ -130,4 +130,4 @@ any structural convention. No new dependencies.
   need for `try/catch` around expected outcomes.
 - `--json` on `spec status` is in scope for the MVP because CI
   integration is one of the early use cases (running 
-  `friday spec validate` in pipelines).
+  `jarvis spec validate` in pipelines).

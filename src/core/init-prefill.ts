@@ -2,7 +2,7 @@ import { readdir } from 'node:fs/promises';
 import type { DetectedStack } from './detect-stack.js';
 
 /**
- * Pure helpers used by `friday init` to inject detected values into
+ * Pure helpers used by `jarvis init` to inject detected values into
  * the steering templates. No I/O except `listTopLevelFolders`, which
  * only reads directory entries (no file contents).
  */

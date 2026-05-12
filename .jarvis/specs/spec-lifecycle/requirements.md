@@ -10,7 +10,7 @@ updated: 2026-05-10
 
 ## 1. Overview
 
-`spec-lifecycle` covers the three commands that drive Friday's
+`spec-lifecycle` covers the three commands that drive Jarvis's
 day-to-day flow: creating a new spec, advancing it through phases by
 explicit approval, and inspecting the state of all specs at a glance.
 Together they enforce the Requirements → Design → Tasks ordering and
@@ -22,15 +22,15 @@ context.
 ### US-001: Create a new spec
 
 **As a** developer with a feature idea
-**I want to** run `friday spec new <name>` to scaffold the three
+**I want to** run `jarvis spec new <name>` to scaffold the three
 spec files
 **So that** I can immediately start the requirements phase with my
 AI agent
 
 **Acceptance criteria:**
-- WHEN the user runs `friday spec new <name>` and no spec with that
+- WHEN the user runs `jarvis spec new <name>` and no spec with that
   name exists THE SYSTEM SHALL create
-  `.friday/specs/<name>/{requirements.md,design.md,tasks.md}`
+  `.jarvis/specs/<name>/{requirements.md,design.md,tasks.md}`
   from the shipped templates
 - WHEN creating each file THE SYSTEM SHALL replace the template
   placeholders `<name>`, `<YYYY-MM-DD>` (created), and
@@ -42,8 +42,8 @@ AI agent
   prompt to stdout, scoped to the new spec
 - WHEN a spec with the same name already exists THE SYSTEM SHALL
   exit with code 1 and write nothing
-- WHEN the user is not in a Friday project THE SYSTEM SHALL exit with
-  the standard "not a Friday project" error
+- WHEN the user is not in a Jarvis project THE SYSTEM SHALL exit with
+  the standard "not a Jarvis project" error
 
 ### US-002: Approve a phase and advance
 
@@ -52,7 +52,7 @@ AI agent
 **So that** I do not have to remember which prompt comes next
 
 **Acceptance criteria:**
-- WHEN the user runs `friday spec approve <name> <phase>` and the spec
+- WHEN the user runs `jarvis spec approve <name> <phase>` and the spec
   exists THE SYSTEM SHALL update the front-matter of `<phase>.md` to
   `status: approved` and refresh the `updated` date
 - WHEN approving `requirements` THE SYSTEM SHALL print the design prompt
@@ -79,15 +79,15 @@ one is in
 done
 
 **Acceptance criteria:**
-- WHEN the user runs `friday spec status` THE SYSTEM SHALL print one
+- WHEN the user runs `jarvis spec status` THE SYSTEM SHALL print one
   line per spec listing the spec name and the status of each of its
   three phases
 - WHEN a spec directory is missing one of the three files THE SYSTEM
   SHALL mark the missing phase as "missing" and continue with the rest
 - WHEN no specs exist yet THE SYSTEM SHALL print a friendly message
-  pointing the user to `friday spec new`
-- WHEN the user is not in a Friday project THE SYSTEM SHALL exit with
-  the standard "not a Friday project" error
+  pointing the user to `jarvis spec new`
+- WHEN the user is not in a Jarvis project THE SYSTEM SHALL exit with
+  the standard "not a Jarvis project" error
 
 ## 3. Functional requirements
 
@@ -118,7 +118,7 @@ filesystems and consistent across projects.
 
 ## 4. Non-functional requirements
 
-- **NFR-001**: `friday spec status` SHALL complete in under 100 ms in
+- **NFR-001**: `jarvis spec status` SHALL complete in under 100 ms in
   a project with up to 50 specs.
 - **NFR-002**: All three commands SHALL operate without network access.
 - **NFR-003**: Status output SHALL be machine-parseable through
@@ -133,7 +133,7 @@ filesystems and consistent across projects.
 - Linking specs to issues or pull requests.
 - Editing spec content via the CLI; specs are edited by the human and
   the agent in markdown directly.
-- Auto-detecting "the active spec" — `friday context` will handle that
+- Auto-detecting "the active spec" — `jarvis context` will handle that
   separately when implemented.
 
 ## 6. Open questions

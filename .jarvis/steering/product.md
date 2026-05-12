@@ -8,11 +8,11 @@ updated: 2026-05-10
 
 ## 1. What it is
 
-Friday is a command-line tool that brings spec-driven development to
-any AI coding agent. It scaffolds a `.friday/` directory with steering
+Jarvis is a command-line tool that brings spec-driven development to
+any AI coding agent. It scaffolds a `.jarvis/` directory with steering
 files and per-feature specs (requirements → design → tasks), and at
 each step emits a carefully written prompt the user pastes into the
-agent of their choice. Friday itself never calls an LLM.
+agent of their choice. Jarvis itself never calls an LLM.
 
 ## 2. Who it's for
 
@@ -33,7 +33,7 @@ brain" of a project. Today the workaround is long markdown files in
 README or notion, copy-pasted at the start of every session — fragile,
 inconsistent, and not enforceable.
 
-Friday makes that workflow first-class: the spec files become the
+Jarvis makes that workflow first-class: the spec files become the
 contract between human and agent, versioned in git, validated for
 traceability, and consumable by any agent.
 
@@ -45,14 +45,14 @@ traceability, and consumable by any agent.
   cloud, no telemetry.
 - **Disciplined by default.** Phase ordering, traceability, and the
   steering/spec asymmetry are enforced by the tool, not by goodwill.
-- **Zero-config first run.** `npx friday init` gives you a working
-  `.friday/` in seconds.
+- **Zero-config first run.** `npx jarvis init` gives you a working
+  `.jarvis/` in seconds.
 
 ## 5. Non-goals
 
 - Not a hosted service. Not a SaaS. Not an account.
 - Not an IDE replacement or extension. The user keeps their editor.
-- Not a code generator. Friday produces specs and prompts; the agent
+- Not a code generator. Jarvis produces specs and prompts; the agent
   the user already pays for produces code.
 - Not a project-management tool. No issues, no kanban, no assignees.
 - Not a documentation site builder. Specs live in markdown; rendering
@@ -64,6 +64,6 @@ traceability, and consumable by any agent.
 
 - Users adopt the workflow on their second project unprompted.
 - Specs are referenced in PR descriptions and code review comments.
-- `friday spec validate` runs in CI on at least some adopting projects.
+- `jarvis spec validate` runs in CI on at least some adopting projects.
 - The tool stays small: under 5 commands and under 5 runtime
   dependencies even after a year of use.

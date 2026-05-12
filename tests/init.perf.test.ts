@@ -25,14 +25,14 @@ async function silent<T>(block: () => Promise<T>): Promise<T> {
   }
 }
 
-const SKIP = process.env['FRIDAY_SKIP_PERF'] === '1';
+const SKIP = process.env['JARVIS_SKIP_PERF'] === '1';
 
-describe('friday init — performance (T-008, NFR-001)', () => {
+describe('jarvis init — performance (T-008, NFR-001)', () => {
   it(
     `completes under ${PERF_BUDGET_MS}ms with ${TOP_LEVEL_ENTRIES} entries`,
     { skip: SKIP },
     async () => {
-      const dir = await mkdtemp(join(tmpdir(), 'friday-init-perf-'));
+      const dir = await mkdtemp(join(tmpdir(), 'jarvis-init-perf-'));
       try {
         // Seed a package.json so detection runs (worst case: pre-fill enabled).
         await writeFile(

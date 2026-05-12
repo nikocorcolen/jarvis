@@ -6,7 +6,7 @@ import {
   prefillTechMd,
 } from '../../core/init-prefill.js';
 import { loadTemplate } from '../../core/templates.js';
-import { FORMAT_VERSION, type FridayConfig } from '../../core/types.js';
+import { FORMAT_VERSION, type JarvisConfig } from '../../core/types.js';
 import { ensureDir, pathExists, writeJson, writeText } from '../../io/fs.js';
 import {
   bold,
@@ -17,11 +17,12 @@ import {
   success,
 } from '../../io/output.js';
 import { renderSteeringBootstrapPrompt } from '../../prompts/steering-bootstrap.js';
+import { t } from '../../core/i18n.js';
 
 export const meta = {
   name: 'init',
   description:
-    'Bootstrap a Friday project: create .friday/ with steering and config',
+    'Bootstrap a Jarvis project: create .jarvis/ with steering and config',
 };
 
 export interface InitArgs {
@@ -31,32 +32,32 @@ export interface InitArgs {
   now?: () => string;
   /** Hard-coded `createdBy` string for deterministic tests. */
   createdBy?: string;
+  /** The language to use for CLI output. */
+  lang?: 'en' | 'es';
 }
 
 const STEERING_FILES = ['product.md', 'tech.md', 'structure.md'] as const;
 
 /**
- * `friday init` flow:
- *  1. Refuse if `.friday/` already exists at cwd (US-003).
+ * `jarvis init` flow:
+ *  1. Refuse if `.jarvis/` already exists at cwd (US-003).
  *  2. Detect stack and (when applicable) list top-level folders.
- *  3. Create `.friday/{steering,specs}` and copy steering templates,
+ *  3. Create `.jarvis/{steering,specs}` and copy steering templates,
  *     pre-filling tech.md and structure.md when there is detection.
- *  4. Write `.friday/config.json`.
+ *  4. Write `.jarvis/config.json`.
  *  5. Print success summary to stderr.
  *  6. If anything was detected, print the bootstrap prompt to stdout.
  */
 export async function run(args: InitArgs): Promise<number> {
   const cwd = args.cwd ?? process.cwd();
   const now = args.now ?? (() => new Date().toISOString());
-  const createdBy = args.createdBy ?? `friday-cli@${getOwnVersion()}`;
+  const createdBy = args.createdBy ?? `jarvis-cli@${getOwnVersion()}`;
+  const lang = args.lang ?? 'es';
 
-  const fridayDir = join(cwd, '.friday');
+  const jarvisDir = join(cwd, '.jarvis');
 
-  if (pathExists(fridayDir)) {
-    error(
-      `.friday/ already exists at ${fridayDir}. ` +
-        `Delete it manually if you want to start fresh.`,
-    );
+  if (pathExists(jarvisDir)) {
+    error(t(lang, 'init.alreadyExists', { path: jarvisDir }));
     return 1;
   }
 
@@ -65,8 +66,8 @@ export async function run(args: InitArgs): Promise<number> {
   const folders = hasDetection ? await listTopLevelFolders(cwd) : [];
 
   // Build the steering directory.
-  const steeringDir = join(fridayDir, 'steering');
-  const specsDir = join(fridayDir, 'specs');
+  const steeringDir = join(jarvisDir, 'steering');
+  const specsDir = join(jarvisDir, 'specs');
   await ensureDir(steeringDir);
   await ensureDir(specsDir);
 
@@ -84,15 +85,16 @@ export async function run(args: InitArgs): Promise<number> {
   }
 
   // Write config.json.
-  const config: FridayConfig = {
+  const config: JarvisConfig = {
     formatVersion: FORMAT_VERSION,
     createdAt: now(),
     createdBy,
+    lang,
   };
-  await writeJson(join(fridayDir, 'config.json'), config);
+  await writeJson(join(jarvisDir, 'config.json'), config);
 
   // Success summary to stderr.
-  success(`Created ${dim(fridayDir)}`);
+  success(t(lang, 'init.createdDir', { path: dim(jarvisDir) }));
   info(`  ├── steering/  ${dim('(' + STEERING_FILES.join(', ') + ')')}`);
   info(`  ├── specs/     ${dim('(empty)')}`);
   info(`  └── config.json`);
@@ -105,28 +107,23 @@ export async function run(args: InitArgs): Promise<number> {
       )})`,
     );
     if (stack.dependencies.length > 0) {
-      info(
-        `Pre-filled tech.md with ${stack.dependencies.length} dependencies.`,
-      );
+      info(t(lang, 'init.prefilledTech', { count: stack.dependencies.length }));
     }
     if (folders.length > 0) {
-      info(`Pre-filled structure.md with ${folders.length} top-level folders.`);
+      info(t(lang, 'init.prefilledStructure', { count: folders.length }));
     }
     info('');
-    info(
-      'Optional: copy this prompt to your AI agent for help drafting the steering files.',
-    );
+    info(t(lang, 'prompt.preface.init'));
     printPromptBlock(
       renderSteeringBootstrapPrompt({
         detectedLanguage: stack.language,
         manifests: stack.manifests,
+        lang,
       }),
     );
   } else {
     info('');
-    info(
-      `No code detected. Open ${dim(steeringDir)} and fill the TODO sections by hand.`,
-    );
+    info(t(lang, 'init.noCodeDetected', { path: dim(steeringDir) }));
   }
 
   return 0;
@@ -138,7 +135,7 @@ export async function run(args: InitArgs): Promise<number> {
  * keep tsconfig simple and to avoid the JSON import assertion dance.
  */
 function getOwnVersion(): string {
-  return process.env['FRIDAY_VERSION'] ?? '0.1.0';
+  return process.env['JARVIS_VERSION'] ?? '0.1.0';
 }
 
 // Re-export for tests that want to assert the contract surface.

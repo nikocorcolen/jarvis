@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import { error } from '../io/output.js';
-import { FridayNotFoundError } from '../core/friday-dir.js';
+import { JarvisNotFoundError } from '../core/jarvis-dir.js';
 
 import * as init from './commands/init.js';
 import * as specNew from './commands/spec-new.js';
@@ -17,15 +17,16 @@ function buildProgram(): Command {
   const program = new Command();
 
   program
-    .name('friday')
+    .name('jarvis')
     .description('Spec-driven development CLI')
     .version(VERSION);
 
   program
     .command('init')
     .description(init.meta.description)
-    .action(async () => {
-      process.exitCode = await init.run({});
+    .option('--lang <lang>', 'language for CLI output (en or es)', 'es')
+    .action(async (opts: { lang: 'en' | 'es' }) => {
+      process.exitCode = await init.run({ lang: opts.lang });
     });
 
   const spec = program.command('spec').description('Manage specs');
@@ -56,8 +57,9 @@ function buildProgram(): Command {
   spec
     .command('status')
     .description(specStatus.meta.description)
-    .action(async () => {
-      process.exitCode = await specStatus.run({});
+    .option('--json', 'emit machine-readable JSON instead of the human table')
+    .action(async (opts: { json?: boolean }) => {
+      process.exitCode = await specStatus.run({ json: opts.json });
     });
 
   spec
@@ -87,7 +89,7 @@ async function main(argv: string[]): Promise<void> {
 }
 
 function handleError(err: unknown): void {
-  if (err instanceof FridayNotFoundError) {
+  if (err instanceof JarvisNotFoundError) {
     error(err.message);
     process.exitCode = 1;
     return;

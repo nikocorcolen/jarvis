@@ -7,10 +7,10 @@ describe('scaffolding smoke test', () => {
     assert.equal(types.FORMAT_VERSION, 1);
   });
 
-  it('locateFridayDir returns null in a tmp dir without .friday/', async () => {
-    const { locateFridayDir } = await import('../src/core/friday-dir.js');
-    const result = locateFridayDir('/tmp');
-    // /tmp is unlikely to have a .friday ancestor.
+  it('locateJarvisDir returns null in a tmp dir without .jarvis/', async () => {
+    const { locateJarvisDir } = await import('../src/core/jarvis-dir.js');
+    const result = locateJarvisDir('/tmp');
+    // /tmp is unlikely to have a .jarvis ancestor.
     assert.equal(result, null);
   });
 });

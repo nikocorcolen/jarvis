@@ -10,7 +10,7 @@ updated: 2026-05-10
 
 ## 1. Overview
 
-The three commands share most of their machinery: locating `.friday/`,
+The three commands share most of their machinery: locating `.jarvis/`,
 parsing front-matter, validating phase ordering, and printing the right
 prompt. The shared logic lives in a new module `core/spec-store.ts`,
 which exposes a small typed API over the spec directory tree. Each
@@ -94,7 +94,7 @@ export interface SpecState {
 }
 
 export interface CreateSpecOptions {
-  fridayDir: string;
+  jarvisDir: string;
   name: string;
   /** Defaults to `() => new Date().toISOString().slice(0, 10)`. */
   today?: () => string;
@@ -116,12 +116,12 @@ export type ApproveResult =
 /** Validates an incoming name against FR-002. */
 export function isValidSpecName(name: string): boolean;
 
-/** Lists all spec directories under .friday/specs/. */
-export async function listSpecs(fridayDir: string): Promise<SpecState[]>;
+/** Lists all spec directories under .jarvis/specs/. */
+export async function listSpecs(jarvisDir: string): Promise<SpecState[]>;
 
 /** Reads the state of a single spec. */
 export async function readSpecState(
-  fridayDir: string,
+  jarvisDir: string,
   name: string,
 ): Promise<SpecState | null>;
 
@@ -137,7 +137,7 @@ export async function createSpec(opts: CreateSpecOptions): Promise<void>;
  * Returns a result variant; the command decides what to print.
  */
 export async function approvePhase(args: {
-  fridayDir: string;
+  jarvisDir: string;
   name: string;
   phase: SpecPhase;
   today?: () => string;
@@ -173,7 +173,7 @@ export function renderTasksPrompt(specName: string): string;
 
 ## 7. Security & privacy
 
-- All operations are confined to `.friday/specs/<name>/`. Path
+- All operations are confined to `.jarvis/specs/<name>/`. Path
   traversal via crafted names is prevented by FR-002 (regex disallows
   `..`, slashes, and other special characters).
 - No external services are contacted (NFR-002).

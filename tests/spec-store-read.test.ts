@@ -6,27 +6,27 @@ import { join } from 'node:path';
 import { listSpecs, readSpecState } from '../src/core/spec-store.js';
 
 interface Fixture {
-  fridayDir: string;
+  jarvisDir: string;
   cleanup: () => Promise<void>;
 }
 
-async function setupFridayDir(): Promise<Fixture> {
-  const root = await mkdtemp(join(tmpdir(), 'friday-store-'));
-  const fridayDir = join(root, '.friday');
-  await mkdir(join(fridayDir, 'specs'), { recursive: true });
+async function setupJarvisDir(): Promise<Fixture> {
+  const root = await mkdtemp(join(tmpdir(), 'jarvis-store-'));
+  const jarvisDir = join(root, '.jarvis');
+  await mkdir(join(jarvisDir, 'specs'), { recursive: true });
   return {
-    fridayDir,
+    jarvisDir,
     cleanup: () => rm(root, { recursive: true, force: true }),
   };
 }
 
 async function writeSpecFile(
-  fridayDir: string,
+  jarvisDir: string,
   spec: string,
   file: string,
   body: string,
 ): Promise<void> {
-  const dir = join(fridayDir, 'specs', spec);
+  const dir = join(jarvisDir, 'specs', spec);
   await mkdir(dir, { recursive: true });
   await writeFile(join(dir, file), body, 'utf8');
 }
@@ -45,32 +45,32 @@ updated: ${updated}
 
 describe('readSpecState (T-002)', () => {
   it('returns null for a missing spec', async () => {
-    const f = await setupFridayDir();
+    const f = await setupJarvisDir();
     try {
-      assert.equal(await readSpecState(f.fridayDir, 'ghost'), null);
+      assert.equal(await readSpecState(f.jarvisDir, 'ghost'), null);
     } finally {
       await f.cleanup();
     }
   });
 
   it('reflects exists/status/updated for each phase file present', async () => {
-    const f = await setupFridayDir();
+    const f = await setupJarvisDir();
     try {
       await writeSpecFile(
-        f.fridayDir,
+        f.jarvisDir,
         'login',
         'requirements.md',
         validFM('approved', '2026-05-10'),
       );
       await writeSpecFile(
-        f.fridayDir,
+        f.jarvisDir,
         'login',
         'design.md',
         validFM('draft', '2026-05-11'),
       );
       // tasks.md missing on purpose.
 
-      const state = await readSpecState(f.fridayDir, 'login');
+      const state = await readSpecState(f.jarvisDir, 'login');
       assert.ok(state);
       assert.equal(state.requirements.exists, true);
       assert.equal(state.requirements.status, 'approved');
@@ -88,15 +88,15 @@ describe('readSpecState (T-002)', () => {
   });
 
   it('returns status: null for malformed front-matter without throwing', async () => {
-    const f = await setupFridayDir();
+    const f = await setupJarvisDir();
     try {
       await writeSpecFile(
-        f.fridayDir,
+        f.jarvisDir,
         'broken',
         'requirements.md',
         '---\nnot: valid: yaml: ::: \n---\nbody',
       );
-      const state = await readSpecState(f.fridayDir, 'broken');
+      const state = await readSpecState(f.jarvisDir, 'broken');
       assert.ok(state);
       assert.equal(state.requirements.exists, true);
       assert.equal(state.requirements.status, null);
@@ -106,15 +106,15 @@ describe('readSpecState (T-002)', () => {
   });
 
   it('treats unknown status values as null', async () => {
-    const f = await setupFridayDir();
+    const f = await setupJarvisDir();
     try {
       await writeSpecFile(
-        f.fridayDir,
+        f.jarvisDir,
         'odd',
         'requirements.md',
         validFM('finalized', '2026-05-10'),
       );
-      const state = await readSpecState(f.fridayDir, 'odd');
+      const state = await readSpecState(f.jarvisDir, 'odd');
       assert.equal(state?.requirements.status, null);
     } finally {
       await f.cleanup();
@@ -123,38 +123,38 @@ describe('readSpecState (T-002)', () => {
 });
 
 describe('listSpecs (T-002)', () => {
-  it('returns empty array when .friday/specs/ has no entries', async () => {
-    const f = await setupFridayDir();
+  it('returns empty array when .jarvis/specs/ has no entries', async () => {
+    const f = await setupJarvisDir();
     try {
-      assert.deepEqual(await listSpecs(f.fridayDir), []);
+      assert.deepEqual(await listSpecs(f.jarvisDir), []);
     } finally {
       await f.cleanup();
     }
   });
 
   it('returns specs alphabetically with their phase states', async () => {
-    const f = await setupFridayDir();
+    const f = await setupJarvisDir();
     try {
       await writeSpecFile(
-        f.fridayDir,
+        f.jarvisDir,
         'beta',
         'requirements.md',
         validFM('draft', '2026-05-10'),
       );
       await writeSpecFile(
-        f.fridayDir,
+        f.jarvisDir,
         'alpha',
         'requirements.md',
         validFM('approved', '2026-05-09'),
       );
       await writeSpecFile(
-        f.fridayDir,
+        f.jarvisDir,
         'alpha',
         'design.md',
         validFM('draft', '2026-05-09'),
       );
 
-      const specs = await listSpecs(f.fridayDir);
+      const specs = await listSpecs(f.jarvisDir);
       assert.deepEqual(
         specs.map((s) => s.name),
         ['alpha', 'beta'],
@@ -167,12 +167,12 @@ describe('listSpecs (T-002)', () => {
     }
   });
 
-  it('returns empty array when .friday/specs/ does not exist', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'friday-store-no-specs-'));
+  it('returns empty array when .jarvis/specs/ does not exist', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'jarvis-store-no-specs-'));
     try {
-      const fridayDir = join(root, '.friday');
-      await mkdir(fridayDir);
-      assert.deepEqual(await listSpecs(fridayDir), []);
+      const jarvisDir = join(root, '.jarvis');
+      await mkdir(jarvisDir);
+      assert.deepEqual(await listSpecs(jarvisDir), []);
     } finally {
       await rm(root, { recursive: true, force: true });
     }

@@ -13,7 +13,7 @@ import { loadTemplate } from '../src/core/templates.js';
 
 describe('listTopLevelFolders (T-002)', () => {
   it('returns alphabetically sorted folders, ignoring noise', async () => {
-    const d = await mkdtemp(join(tmpdir(), 'friday-folders-'));
+    const d = await mkdtemp(join(tmpdir(), 'jarvis-folders-'));
     try {
       // Folders that should appear, in unsorted order.
       await mkdir(join(d, 'src'));
@@ -37,12 +37,12 @@ describe('listTopLevelFolders (T-002)', () => {
   });
 
   it('returns empty array when directory cannot be read', async () => {
-    const folders = await listTopLevelFolders('/nonexistent-friday-test-path');
+    const folders = await listTopLevelFolders('/nonexistent-jarvis-test-path');
     assert.deepEqual(folders, []);
   });
 
   it('returns empty array for an empty directory', async () => {
-    const d = await mkdtemp(join(tmpdir(), 'friday-empty-folders-'));
+    const d = await mkdtemp(join(tmpdir(), 'jarvis-empty-folders-'));
     try {
       assert.deepEqual(await listTopLevelFolders(d), []);
     } finally {

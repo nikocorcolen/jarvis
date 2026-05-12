@@ -1,5 +1,5 @@
 /**
- * Shared types for Friday CLI.
+ * Shared types for Jarvis CLI.
  *
  * This module is intentionally pure: no I/O, no side effects, no
  * dependencies. Anything imported from here is safe to use in any layer.
@@ -28,11 +28,12 @@ export interface SteeringFrontMatter {
   updated: string;
 }
 
-/** .friday/config.json shape. */
-export interface FridayConfig {
+/** .jarvis/config.json shape. */
+export interface JarvisConfig {
   formatVersion: number;
   createdAt: string;
   createdBy: string;
+  lang?: 'en' | 'es';
 }
 
 /** Identifier kinds used in requirements.md. */
@@ -41,7 +42,7 @@ export type IdKind = 'US' | 'FR' | 'NFR';
 /** A traceability identifier, e.g. "US-001". */
 export type Id = `${IdKind}-${string}`;
 
-/** A traceability issue found by `friday spec validate`. */
+/** A traceability issue found by `jarvis spec validate`. */
 export type Issue =
   | {
       kind: 'orphan';

@@ -1,10 +1,10 @@
 {
-  "name": "friday-cli",
+  "name": "jarvis-cli",
   "version": "0.1.0",
-  "description": "Spec-driven development CLI: bootstraps .friday/, manages specs, validates traceability.",
+  "description": "Spec-driven development CLI: bootstraps .jarvis/, manages specs, validates traceability.",
   "type": "module",
   "bin": {
-    "friday": "./dist/cli/index.js"
+    "jarvis": "./dist/cli/index.js"
   },
   "files": [
     "dist",
@@ -26,10 +26,12 @@
   "dependencies": {
     "commander": "^12.1.0",
     "gray-matter": "^4.0.3",
+    "js-yaml": "^3.13.1",
     "kleur": "^4.1.5",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
+    "@types/js-yaml": "^3.12.0",
     "@types/node": "^20.14.0",
     "@types/prompts": "^2.4.9",
     "typescript": "^5.5.0"

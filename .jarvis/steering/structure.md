@@ -24,7 +24,7 @@ updated: 2026-05-10
 - `tests/` — unit, integration, and e2e tests, mirroring `src/`.
 - `dist/` — compiled JavaScript output, published to npm.
 - `dist-tests/` — compiled tests, never published.
-- `.friday/` — Friday's own specs, written in Friday (dogfooding).
+- `.jarvis/` — Jarvis's own specs, written in Jarvis (dogfooding).
 
 ## 2. Where things go
 
@@ -35,7 +35,7 @@ updated: 2026-05-10
 - New domain logic → first try to extend an existing `core/` module;
   create a new file only when the responsibility is clearly distinct.
 - New filesystem helper → `src/io/fs.ts`. Do not import `node:fs`
-  outside this file (and `core/friday-dir.ts`, which uses
+  outside this file (and `core/jarvis-dir.ts`, which uses
   `existsSync` synchronously by design).
 - New shared type → `src/core/types.ts`, but only when used by 2+
   modules. Otherwise keep types local to their module.

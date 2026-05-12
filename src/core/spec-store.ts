@@ -44,14 +44,14 @@ export interface SpecState {
 }
 
 export interface CreateSpecOptions {
-  fridayDir: string;
+  jarvisDir: string;
   name: string;
   /** Defaults to `() => new Date().toISOString().slice(0, 10)`. */
   today?: () => string;
 }
 
 export interface ApprovePhaseOptions {
-  fridayDir: string;
+  jarvisDir: string;
   name: string;
   phase: SpecPhase;
   today?: () => string;
@@ -122,10 +122,10 @@ export function isValidSpecName(name: string): boolean {
  * malformed front-matter (status falls back to `null`).
  */
 export async function readSpecState(
-  fridayDir: string,
+  jarvisDir: string,
   name: string,
 ): Promise<SpecState | null> {
-  const specDir = specDirPath(fridayDir, name);
+  const specDir = specDirPath(jarvisDir, name);
   if (!pathExists(specDir)) return null;
 
   const [requirements, design, tasks] = await Promise.all(
@@ -141,12 +141,12 @@ export async function readSpecState(
 }
 
 /**
- * Lists every spec under `.friday/specs/`, sorted alphabetically.
+ * Lists every spec under `.jarvis/specs/`, sorted alphabetically.
  * Reads of the three phase files happen in parallel for each spec
  * (NFR-001: bench in T-010).
  */
-export async function listSpecs(fridayDir: string): Promise<SpecState[]> {
-  const specsDir = join(fridayDir, 'specs');
+export async function listSpecs(jarvisDir: string): Promise<SpecState[]> {
+  const specsDir = join(jarvisDir, 'specs');
   if (!pathExists(specsDir)) return [];
 
   let entries;
@@ -162,7 +162,7 @@ export async function listSpecs(fridayDir: string): Promise<SpecState[]> {
     .sort((a, b) => a.localeCompare(b));
 
   const states = await Promise.all(
-    names.map((name) => readSpecState(fridayDir, name)),
+    names.map((name) => readSpecState(jarvisDir, name)),
   );
 
   return states.filter((s): s is SpecState => s !== null);
@@ -226,22 +226,22 @@ function normalizeDateField(value: unknown): string | null {
  * spec on disk.
  */
 export async function createSpec(opts: CreateSpecOptions): Promise<void> {
-  const { fridayDir, name } = opts;
+  const { jarvisDir, name } = opts;
   const today = opts.today ?? defaultToday;
 
   if (!isValidSpecName(name)) {
     throw new InvalidSpecNameError(name);
   }
 
-  const finalPath = specDirPath(fridayDir, name);
+  const finalPath = specDirPath(jarvisDir, name);
   if (pathExists(finalPath)) {
     throw new SpecAlreadyExistsError(finalPath);
   }
 
-  await ensureDir(join(fridayDir, 'specs'));
+  await ensureDir(join(jarvisDir, 'specs'));
 
   // Stage in a tmp dir, then atomic rename.
-  const stagingRoot = await mkdtemp(join(tmpdir(), 'friday-spec-'));
+  const stagingRoot = await mkdtemp(join(tmpdir(), 'jarvis-spec-'));
   const stagingDir = join(stagingRoot, name);
   await ensureDir(stagingDir);
 
@@ -290,10 +290,10 @@ function renderSpecFile(template: string, name: string, date: string): string {
 export async function approvePhase(
   opts: ApprovePhaseOptions,
 ): Promise<ApproveResult> {
-  const { fridayDir, name, phase } = opts;
+  const { jarvisDir, name, phase } = opts;
   const today = opts.today ?? defaultToday;
 
-  const state = await readSpecState(fridayDir, name);
+  const state = await readSpecState(jarvisDir, name);
   if (!state) return { kind: 'spec-not-found' };
 
   const phaseState = state[phase];
@@ -311,7 +311,7 @@ export async function approvePhase(
   }
 
   // Mutate the file: parse, change status + updated, stringify, write.
-  const filePath = join(specDirPath(fridayDir, name), PHASE_FILES[phase]);
+  const filePath = join(specDirPath(jarvisDir, name), PHASE_FILES[phase]);
   const raw = await readText(filePath);
   const { data, content } = parseFrontMatter<Record<string, unknown>>(raw);
 
@@ -328,8 +328,8 @@ export async function approvePhase(
 // Helpers
 // ---------------------------------------------------------------------------
 
-function specDirPath(fridayDir: string, name: string): string {
-  return join(fridayDir, 'specs', name);
+function specDirPath(jarvisDir: string, name: string): string {
+  return join(jarvisDir, 'specs', name);
 }
 
 function defaultToday(): string {

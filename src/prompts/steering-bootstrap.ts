@@ -1,5 +1,7 @@
+import { t } from '../core/i18n.js';
+
 /**
- * Renders the optional prompt printed at the end of `friday init`
+ * Renders the optional prompt printed at the end of `jarvis init`
  * when the repo already has code. Helps the user fill the TODO
  * sections of steering files without having an agent invent answers.
  *
@@ -12,18 +14,69 @@
 export function renderSteeringBootstrapPrompt(args: {
   detectedLanguage: string | null;
   manifests: string[];
+  lang?: 'en' | 'es';
 }): string {
-  const lang = args.detectedLanguage ?? '<unknown>';
+  const langVal = args.lang ?? 'es';
+  const detectedLang = args.detectedLanguage ?? '<unknown>';
   const manifests =
     args.manifests.length > 0 ? args.manifests.join(', ') : '<none>';
 
-  return `You are helping me draft Friday steering files for an existing codebase.
+  if (langVal === 'es') {
+    return `Me estás ayudando a redactar archivos de steering de Jarvis para un código existente.
+
+CONTEXTO:
+- Directorio de trabajo: el repositorio actual
+- Lenguaje detectado: ${detectedLang}
+- Manifiestos detectados: ${manifests}
+- Archivos a completar: .jarvis/steering/product.md, tech.md, structure.md
+  (algunas secciones están pre-rellenadas y etiquetadas "(detected, ...)";
+   el resto están marcadas con <!-- TODO -->)
+
+TU TAREA:
+Para cada sección marcada con <!-- TODO -->, recopila la información necesaria
+para completarla. Sigue estas reglas sin excepción:
+
+REGLAS:
+1. product.md — PREGUNTA, NUNCA INFIERAS.
+   El código no contiene las respuestas a "quién es el usuario",
+   "qué problema resuelve", o "cuáles son los no-objetivos".
+   Entrevístame sección por sección. No propongas respuestas de
+   producto inspeccionando el código.
+
+2. tech.md y structure.md — OBSERVA, LUEGO PREGUNTA "¿INTENCIONAL O ACCIDENTAL?".
+   Puedes inspeccionar el código para proponer valores, pero siempre formula
+   tu propuesta como una pregunta: "Veo X en el código — ¿esto es intencional
+   o accidental?". El estado actual del código no es automáticamente
+   el estado deseado.
+
+3. Las entradas pre-rellenadas etiquetadas "(detected, classify as load-bearing or
+   replaceable)" necesitan mi clasificación. Revísalas conmigo una por una;
+   no las clasifiques en mi lugar.
+
+4. Una sección a la vez. No rellenes múltiples secciones en lote.
+
+5. Después de cada sección, muestra tu borrador y ESPERA mi aprobación
+   antes de editar el archivo. Nunca sobrescribas un TODO en silencio.
+
+6. No inventes nuevas secciones, no cambies los encabezados, no modifiques
+   el front-matter. Solo completa el cuerpo bajo los marcadores TODO existentes.
+
+SALIDA:
+Empieza con product.md, sección 1 ("What it is").
+Pregúntame, no adivines.
+Luego pasa a la sección 2 solo después de que apruebe la sección 1.
+Continúa a través de product.md, luego tech.md, luego structure.md.
+
+Detente cuando todos los marcadores TODO estén resueltos o yo te pida pausar.`;
+  }
+
+  return `You are helping me draft Jarvis steering files for an existing codebase.
 
 CONTEXT:
 - Working directory: the current repo
-- Detected language: ${lang}
+- Detected language: ${detectedLang}
 - Detected manifests: ${manifests}
-- Files to fill: .friday/steering/product.md, tech.md, structure.md
+- Files to fill: .jarvis/steering/product.md, tech.md, structure.md
   (some sections are pre-filled and tagged "(detected, ...)";
    the rest are marked <!-- TODO -->)
 

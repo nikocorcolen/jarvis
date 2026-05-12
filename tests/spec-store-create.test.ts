@@ -12,11 +12,11 @@ import { parseFrontMatter } from '../src/core/frontmatter.js';
 import type { SpecFrontMatter } from '../src/core/types.js';
 
 async function setup() {
-  const root = await mkdtemp(join(tmpdir(), 'friday-create-'));
-  const fridayDir = join(root, '.friday');
-  await mkdir(fridayDir);
+  const root = await mkdtemp(join(tmpdir(), 'jarvis-create-'));
+  const jarvisDir = join(root, '.jarvis');
+  await mkdir(jarvisDir);
   return {
-    fridayDir,
+    jarvisDir,
     cleanup: () => rm(root, { recursive: true, force: true }),
   };
 }
@@ -34,12 +34,12 @@ describe('createSpec (T-003, US-001)', () => {
     const f = await setup();
     try {
       await createSpec({
-        fridayDir: f.fridayDir,
+        jarvisDir: f.jarvisDir,
         name: 'login',
         today: () => FIXED_DATE,
       });
 
-      const dir = join(f.fridayDir, 'specs', 'login');
+      const dir = join(f.jarvisDir, 'specs', 'login');
       for (const file of ['requirements.md', 'design.md', 'tasks.md']) {
         const raw = await readFile(join(dir, file), 'utf8');
         const { data } = parseFrontMatter<Partial<SpecFrontMatter>>(raw);
@@ -68,14 +68,14 @@ describe('createSpec (T-003, US-001)', () => {
       await assert.rejects(
         () =>
           createSpec({
-            fridayDir: f.fridayDir,
+            jarvisDir: f.jarvisDir,
             name: 'Bad Name',
             today: () => FIXED_DATE,
           }),
         InvalidSpecNameError,
       );
-      // .friday/specs/ should not exist or should be empty.
-      const specsDir = join(f.fridayDir, 'specs');
+      // .jarvis/specs/ should not exist or should be empty.
+      const specsDir = join(f.jarvisDir, 'specs');
       try {
         const files = await readFile(join(specsDir, 'Bad Name'), 'utf8');
         assert.fail('spec dir should not exist: ' + files);
@@ -91,14 +91,14 @@ describe('createSpec (T-003, US-001)', () => {
     const f = await setup();
     try {
       await createSpec({
-        fridayDir: f.fridayDir,
+        jarvisDir: f.jarvisDir,
         name: 'twin',
         today: () => FIXED_DATE,
       });
       await assert.rejects(
         () =>
           createSpec({
-            fridayDir: f.fridayDir,
+            jarvisDir: f.jarvisDir,
             name: 'twin',
             today: () => FIXED_DATE,
           }),
@@ -114,15 +114,15 @@ describe('createSpec (T-003, US-001)', () => {
     try {
       await assert.rejects(() =>
         createSpec({
-          fridayDir: f.fridayDir,
+          jarvisDir: f.jarvisDir,
           name: '',
           today: () => FIXED_DATE,
         }),
       );
       // Even the staging tmp directory must be cleaned up. We cannot
-      // assert on tmp paths directly, but `.friday/specs/` should at
+      // assert on tmp paths directly, but `.jarvis/specs/` should at
       // least not contain anything bogus.
-      const specsDir = join(f.fridayDir, 'specs');
+      const specsDir = join(f.jarvisDir, 'specs');
       try {
         const { readdir } = await import('node:fs/promises');
         const entries = await readdir(specsDir);
