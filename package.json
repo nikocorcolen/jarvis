@@ -1,6 +1,6 @@
 {
   "name": "@nikocorcolen/jarvis",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Spec-driven development CLI: bootstraps .jarvis/, manages specs, validates traceability.",
   "type": "module",
   "bin": {
@@ -9,6 +9,7 @@
   "files": [
     "dist",
     "templates",
+    "assets",
     "README.md",
     "LICENSE"
   ],
