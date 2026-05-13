@@ -62,6 +62,8 @@ export async function run(args: SpecNewArgs): Promise<number> {
   success(t(config.lang, 'spec.created', { name: args.name }));
   info(t(config.lang, 'status.action.requirements', { name: args.name }));
 
-  printPromptBlock(renderRequirementsPrompt(args.name, config.lang));
+  printPromptBlock(
+    renderRequirementsPrompt(args.name, config.lang, description),
+  );
   return 0;
 }
