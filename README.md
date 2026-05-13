@@ -1,6 +1,6 @@
 # @nikocorcolen/jarvis
 
-![Jarvis Workflow](assets/workflow.png)
+![Jarvis Workflow](https://raw.githubusercontent.com/nikocorcolen/jarvis/develop/assets/workflow.png)
 
 Spec-driven development CLI. Bootstraps `.jarvis/`, manages specs through a Requirements → Design → Tasks workflow, and validates traceability between them.
 
