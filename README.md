@@ -1,14 +1,16 @@
-# jarvis-cli
+# @nikocorcolen/jarvis
+
+![Jarvis Workflow](assets/workflow.png)
 
 Spec-driven development CLI. Bootstraps `.jarvis/`, manages specs through a Requirements → Design → Tasks workflow, and validates traceability between them.
 
-> **Status (v0.1.0)**: `init` and the three spec lifecycle commands (`spec new`, `spec approve`, `spec status`) are implemented end-to-end. `spec validate` and `context` remain scaffolded as stubs and are tracked under `.jarvis/specs/` of this repo (dogfooding).
+> **Status (v1.0.0)**: `init` and the three spec lifecycle commands (`spec new`, `spec approve`, `spec status`) are implemented end-to-end. `spec validate` and `context` are also functional.
 
 ## Quick start
 
 ```bash
-# Install (once published)
-npm install -g jarvis-cli
+# Install
+npm install -g @nikocorcolen/jarvis
 
 # Or run from a clone
 npm install

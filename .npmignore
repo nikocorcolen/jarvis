@@ -1,6 +1,24 @@
+# Source code
 src/
 tests/
 tsconfig.json
-.gitignore
-.github/
-*.tgz
+tsconfig.test.json
+
+# Tooling
+rename.cjs
+functional_test_env/
+.gemini/
+.friday/
+.jarvis/
+
+# Package managers
+package-lock.json
+node_modules/
+
+# Logs
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Build artifacts (keep dist, but not dist-tests)
+dist-tests/

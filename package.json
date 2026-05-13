@@ -1,6 +1,6 @@
 {
-  "name": "jarvis-cli",
-  "version": "0.1.0",
+  "name": "@nikocorcolen/jarvis",
+  "version": "1.0.0",
   "description": "Spec-driven development CLI: bootstraps .jarvis/, manages specs, validates traceability.",
   "type": "module",
   "bin": {
@@ -17,7 +17,7 @@
     "build:tests": "tsc -p tsconfig.test.json",
     "dev": "tsc --watch",
     "test": "npm run build:tests && node --test dist-tests/tests/*.js",
-    "clean": "rm -rf dist dist-tests",
+    "clean": "powershell -NoProfile -Command \"if (Test-Path dist) { Remove-Item -Recurse -Force dist }; if (Test-Path dist-tests) { Remove-Item -Recurse -Force dist-tests }\"",
     "prepublishOnly": "npm run clean && npm run build"
   },
   "engines": {
@@ -41,7 +41,7 @@
     "cli",
     "ai",
     "agents",
-    "kiro",
+    "jarvis",
     "requirements",
     "design"
   ],
