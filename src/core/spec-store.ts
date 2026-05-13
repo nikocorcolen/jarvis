@@ -46,6 +46,8 @@ export interface SpecState {
 export interface CreateSpecOptions {
   jarvisDir: string;
   name: string;
+  /** Initial description for the requirements overview. */
+  description?: string;
   /** Defaults to `() => new Date().toISOString().slice(0, 10)`. */
   today?: () => string;
 }
@@ -249,7 +251,15 @@ export async function createSpec(opts: CreateSpecOptions): Promise<void> {
     const date = today();
     for (const phase of PHASES) {
       const template = await loadTemplate('spec', PHASE_FILES[phase]);
-      const filled = renderSpecFile(template, name, date);
+      let filled = renderSpecFile(template, name, date);
+
+      if (phase === 'requirements' && opts.description) {
+        filled = filled.replace(
+          '<!-- 2-3 sentences. What problem this feature solves and for whom. -->',
+          opts.description,
+        );
+      }
+
       await writeText(join(stagingDir, PHASE_FILES[phase]), filled);
     }
     await rename(stagingDir, finalPath);

@@ -5,6 +5,7 @@ export type TranslationKey =
   | 'init.prefilledTech'
   | 'init.prefilledStructure'
   | 'spec.created'
+  | 'spec.descriptionPrompt'
   | 'spec.approvedRequirements'
   | 'spec.approvedDesign'
   | 'spec.approvedTasks'
@@ -46,6 +47,7 @@ const en: Record<TranslationKey, string> = {
   'init.prefilledTech': 'Pre-filled tech.md with {count} dependencies.',
   'init.prefilledStructure': 'Pre-filled structure.md with {count} top-level folders.',
   'spec.created': "✓ Created spec '{name}'",
+  'spec.descriptionPrompt': 'Briefly describe what this feature should do:',
   'spec.approvedRequirements': "✓ Approved requirements for spec '{name}'.",
   'spec.approvedDesign': "✓ Approved design for spec '{name}'.",
   'spec.approvedTasks': "✓ Approved tasks for spec '{name}'.",
@@ -88,6 +90,7 @@ const es: Record<TranslationKey, string> = {
   'init.prefilledTech': 'tech.md pre-rellenado con {count} dependencias.',
   'init.prefilledStructure': 'structure.md pre-rellenado con {count} carpetas principales.',
   'spec.created': "✓ Spec '{name}' creado",
+  'spec.descriptionPrompt': 'Describe brevemente qué debe hacer esta feature:',
   'spec.approvedRequirements': "✓ Requerimientos aprobados para el spec '{name}'.",
   'spec.approvedDesign': "✓ Diseño aprobado para el spec '{name}'.",
   'spec.approvedTasks': "✓ Tareas aprobadas para el spec '{name}'.",

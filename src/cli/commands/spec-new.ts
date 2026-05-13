@@ -1,4 +1,5 @@
 import { join } from 'node:path';
+import prompts from 'prompts';
 import {
   createSpec,
   InvalidSpecNameError,
@@ -23,14 +24,29 @@ export const meta = {
 
 export interface SpecNewArgs {
   name: string;
+  description?: string;
 }
 
 export async function run(args: SpecNewArgs): Promise<number> {
   const jarvisDir = requireJarvisDir();
   const config = readJarvisConfig(jarvisDir);
 
+  let description = args.description;
+  if (!description) {
+    const response = await prompts({
+      type: 'text',
+      name: 'value',
+      message: t(config.lang, 'spec.descriptionPrompt'),
+    });
+    description = response.value;
+  }
+
   try {
-    await createSpec({ jarvisDir, name: args.name });
+    await createSpec({
+      jarvisDir,
+      name: args.name,
+      description,
+    });
   } catch (err) {
     if (err instanceof InvalidSpecNameError) {
       error(err.message);
@@ -43,10 +59,9 @@ export async function run(args: SpecNewArgs): Promise<number> {
     throw err;
   }
 
-  const specDir = join(jarvisDir, 'specs', args.name);
   success(t(config.lang, 'spec.created', { name: args.name }));
   info(t(config.lang, 'status.action.requirements', { name: args.name }));
-  
+
   printPromptBlock(renderRequirementsPrompt(args.name, config.lang));
   return 0;
 }
